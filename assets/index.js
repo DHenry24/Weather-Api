@@ -10,15 +10,9 @@ const sunriseDOM = document.querySelector('.sunrise');
 const sunsetDOM = document.querySelector('.sunset');
 
 window.addEventListener('load', () => {
-  let long;
-  let lat;
-  // Accesing Geolocation of User
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition((position) => {
-      // Storing Longitude and Latitude in variables
-      long = position.coords.longitude;
-      lat = position.coords.latitude;
-      const base = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=${api}&units=metric`;
+  let long = -122.4194;
+  let lat = 37.7749;
+  const base = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=${api}&units=metric`;
 
       // Using fetch to get data
       fetch(base)
@@ -48,5 +42,4 @@ window.addEventListener('load', () => {
           sunsetDOM.textContent = `${sunsetGMT.toLocaleDateString()}, ${sunsetGMT.toLocaleTimeString()}`;
         });
     });
-  }
-});
+ 
