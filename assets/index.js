@@ -90,10 +90,40 @@ function displayForecast(data) {
     document.getElementById('forecast').innerHTML = forecastHtmlString;
   }
 
-function addToSearchHistory(city) {
+  function addToSearchHistory(city) {
     if (!searchHistory.includes(city)) {
-        searchHistory.push(city);
-        const searchHistoryHtml = searchHistory.map(city => `<button>${city}</button>`).join('');
-        searchHistoryDiv.innerHTML = searchHistoryHtml;
+      searchHistory.push(city);
+      localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
     }
-}
+    const searchHistoryHtml = searchHistory.map(city => `<button onclick="searchCity('${city}')">${city}</button>`).join('');
+    searchHistoryDiv.innerHTML = searchHistoryHtml;
+  }
+  
+  let sHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
+
+  const searchHistoryHtml = sHistory.map(city => `<button onclick="searchCity('${city}')">${city}</button>`).join('');
+  searchHistoryDiv.innerHTML = searchHistoryHtml;
+
+  function searchCity(city) {
+      fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+          const weatherData = {
+            city: data.name,
+            temperature: data.main.temp,
+            description: data.weather[0].description,
+            icon: data.weather[0].icon
+          };
+          
+          const weatherHtml = `
+            <h2>${weatherData.city}</h2>
+            <p>${weatherData.temperature}°C</p>
+            <p>${weatherData.description}</p>
+            <img src="http://openweathermap.org/img/w/${weatherData.icon}.png" alt="Weather icon">
+          `;
+          
+          document.getElementById('weather').innerHTML = weatherHtml;
+        })
+        .catch(error => console.log(error));
+    }
+  
